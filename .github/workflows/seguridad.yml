@@ -1,0 +1,57 @@
+name: seguridad
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo_sqlite, gd, intl, zip
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: composer install --no-interaction --prefer-dist
+      - run: npm ci
+      - run: npm run build
+      - run: cp .env.example .env && php artisan key:generate
+
+      - name: Pruebas (cálculo, roles, IDOR, fuerza bruta…)
+        run: vendor/bin/phpunit
+
+      - name: Vulnerabilidades conocidas en dependencias
+        run: |
+          composer audit
+          npm audit --omit=dev --audit-level=high
+
+  strix:
+    # Pentest con IA. Solo corre si configuraste los secretos STRIX_LLM y LLM_API_KEY.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    env:
+      STRIX_LLM: ${{ secrets.STRIX_LLM }}
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Instalar Strix
+        if: env.LLM_API_KEY != ''
+        run: curl -sSL https://strix.ai/install | bash
+      - name: Escaneo rápido
+        if: env.LLM_API_KEY != ''
+        run: strix -n -t ./ --scan-mode quick
