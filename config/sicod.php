@@ -39,6 +39,10 @@ return [
     // Duracion por defecto de una reserva de lote, en dias.
     'dias_reserva' => 3,
 
+    // Contrasena de las cuentas que crea el seeder. En un servidor publico
+    // debe definirse: la de por defecto figura en el README.
+    'password_inicial' => env('SICOD_PASSWORD_INICIAL') ?: 'sicod2026',
+
     // Obliga a cambiar la contrasena inicial en el primer ingreso.
     'forzar_cambio_password' => (bool) env('SICOD_FORZAR_CAMBIO_PASSWORD', true),
 

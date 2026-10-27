@@ -29,7 +29,7 @@ class UsuarioSeeder extends Seeder
             // correr el seeder no reinicia una contrasena ya cambiada.
             if (! $usuario->exists) {
                 $usuario->forceFill([
-                    'password' => Hash::make('sicod2026'),
+                    'password' => Hash::make(config('sicod.password_inicial')),
                     'debe_cambiar_password' => true,
                 ]);
             }
@@ -37,6 +37,9 @@ class UsuarioSeeder extends Seeder
             $usuario->forceFill(['rol' => $cuenta['rol'], 'activo' => true])->save();
         }
 
-        $this->command?->warn('Contraseña inicial: sicod2026. El sistema pedirá cambiarla en el primer ingreso.');
+        // No se imprime una contrasena propia: en un servidor queda en los logs.
+        $this->command?->warn(config('sicod.password_inicial') === 'sicod2026'
+            ? 'Contraseña inicial: sicod2026. El sistema pedirá cambiarla en el primer ingreso.'
+            : 'Contraseña inicial: la definida en SICOD_PASSWORD_INICIAL. El sistema pedirá cambiarla en el primer ingreso.');
     }
 }

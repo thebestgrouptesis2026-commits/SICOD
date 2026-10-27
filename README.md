@@ -58,6 +58,8 @@ php artisan serve
 
 Abre `http://localhost:8000`. Pasos detallados para Windows: [docs/INSTALACION.md](docs/INSTALACION.md).
 
+Para publicarlo en la nube con un enlace permanente (Railway + MySQL): [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md).
+
 | Rol | Correo | Contraseña inicial | Puede |
 |---|---|---|---|
 | Administrador | admin@taipe.pe | sicod2026 | Todo, más cuentas y bitácora de seguridad |
