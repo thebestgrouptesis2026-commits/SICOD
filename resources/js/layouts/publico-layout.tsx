@@ -19,15 +19,15 @@ export default function PublicoLayout({ titulo, children }: { titulo?: string; c
         <TooltipProvider>
             <Head title={titulo} />
             <div className="flex min-h-dvh flex-col">
-                <header className="sticky top-0 z-30 border-b bg-card/90 backdrop-blur-sm">
+                <header className="sticky top-0 z-30 border-b bg-card/80 backdrop-blur-md supports-backdrop-filter:bg-card/70">
                     <div className="mx-auto flex h-16 max-w-[1360px] items-center gap-3 px-4 sm:px-6">
-                        <Link href="/" aria-label="Inicio">
+                        <Link href="/" aria-label="Inicio" className="rounded-md">
                             <Marca />
                         </Link>
                         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
                             <SelectorMoneda />
                             <SelectorTema />
-                            <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
+                            <Button variant="outline" size="sm" asChild className="ml-1 hidden sm:inline-flex">
                                 <Link href={auth.usuario ? '/panel' : '/ingresar'}>
                                     <LogIn />
                                     {auth.usuario ? 'Ir al panel' : 'Acceso asesores'}
@@ -40,10 +40,13 @@ export default function PublicoLayout({ titulo, children }: { titulo?: string; c
                 <main className="flex-1">{children}</main>
 
                 <footer className="border-t bg-card">
-                    <div className="mx-auto grid max-w-[1360px] gap-3 px-4 py-8 text-sm text-muted-foreground sm:grid-cols-[1fr_auto] sm:px-6">
-                        <div>
-                            <p className="font-semibold text-foreground">Inmobiliaria Constructora Taipe S.A.C.</p>
-                            <p>RUC 20502902637 · Habilitación urbana y venta de lotes en Lima</p>
+                    <div className="mx-auto grid max-w-[1360px] gap-6 px-4 py-10 text-sm text-muted-foreground sm:grid-cols-[1fr_auto] sm:items-end sm:px-6">
+                        <div className="grid gap-3">
+                            <Marca subtitulo={false} />
+                            <div>
+                                <p className="font-semibold text-foreground">Inmobiliaria Constructora Taipe S.A.C.</p>
+                                <p>RUC 20502902637 · Habilitación urbana y venta de lotes en Lima</p>
+                            </div>
                         </div>
                         <p className="sm:text-right">
                             Precios de lista en dólares americanos.

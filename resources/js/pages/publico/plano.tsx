@@ -1,9 +1,10 @@
 import { router, usePoll } from '@inertiajs/react';
-import { CornerDownRight, MousePointerClick } from 'lucide-react';
+import { ArrowDown, BadgePercent, CalendarRange, CornerDownRight, FileText, MapPin, MousePointerClick, Wallet } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Cotizador } from '@/components/cotizador';
 import { Plano } from '@/components/plano';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
@@ -46,56 +47,137 @@ export default function PlanoPublico({ proyectos, proyecto, reglas, lotes, resum
     };
 
     const desdeInterior = Math.min(...lotes.filter((l) => !l.esquina && l.estado === 'disponible').map((l) => l.precio), Infinity);
+    const cuotaDesde = Number.isFinite(desdeInterior) ? desdeInterior / reglas.plazo_maximo : null;
+    const total = Number(resumen?.total_lotes ?? lotes.length) || 1;
 
     return (
         <PublicoLayout titulo={proyecto.nombre}>
-            <section className="border-b bg-card">
-                <div className="mx-auto grid max-w-[1360px] gap-6 px-4 py-7 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-end">
-                    <div>
-                        {proyectos.length > 1 && (
-                            <Select value={String(proyecto.id)} onValueChange={(v) => router.get('/', { proyecto: v })}>
-                                <SelectTrigger size="sm" className="mb-3" aria-label="Proyecto">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {proyectos.map((p) => (
-                                        <SelectItem key={p.id} value={String(p.id)}>
-                                            {p.nombre}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        )}
-                        <h1 className="text-[clamp(1.75rem,3.4vw,2.6rem)] leading-[1.05] font-extrabold">
-                            Elige tu lote y conoce tu cuota al instante
+            <section className="relative overflow-hidden border-b bg-card">
+                <div className="fondo-plano pointer-events-none absolute inset-0 mask-[linear-gradient(to_bottom,black,transparent_85%)]" aria-hidden="true" />
+                <div className="pointer-events-none absolute -top-40 -right-32 size-136 rounded-full bg-primary/10 blur-3xl" aria-hidden="true" />
+
+                <div className="relative mx-auto grid max-w-[1360px] gap-8 px-4 pt-10 pb-9 sm:px-6 lg:grid-cols-[minmax(0,1fr)_25rem] lg:items-center lg:gap-12 lg:pt-14 lg:pb-12 xl:grid-cols-[minmax(0,1fr)_27rem]">
+                    <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                            {proyectos.length > 1 ? (
+                                <Select value={String(proyecto.id)} onValueChange={(v) => router.get('/', { proyecto: v })}>
+                                    <SelectTrigger size="sm" className="rounded-full bg-card" aria-label="Proyecto">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {proyectos.map((p) => (
+                                            <SelectItem key={p.id} value={String(p.id)}>
+                                                {p.nombre}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5 rounded-full border bg-card px-3 py-1 text-[13px] font-medium">
+                                    <MapPin className="size-3.5 text-primary" aria-hidden="true" />
+                                    {proyecto.nombre} · {proyecto.ubicacion}
+                                </span>
+                            )}
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-ok-soft px-3 py-1 text-[13px] font-medium text-foreground">
+                                <span className="relative flex size-2" aria-hidden="true">
+                                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60 motion-reduce:hidden" />
+                                    <span className="relative inline-flex size-2 rounded-full bg-ok" />
+                                </span>
+                                Disponibilidad en tiempo real
+                            </span>
+                        </div>
+
+                        <h1 className="mt-5 max-w-[16ch] text-[clamp(2.1rem,4.6vw,3.6rem)] leading-[1.02] font-extrabold">
+                            Elige tu lote y conoce tu cuota <span className="text-primary">al instante</span>
                         </h1>
-                        <p className="mt-2 max-w-[62ch] text-[15px] text-muted-foreground">
-                            {proyecto.nombre}, {proyecto.ubicacion}. Sin cuota inicial y hasta {reglas.plazo_maximo} meses para pagar;{' '}
-                            {reglas.descuento_contado_pct}% de descuento si pagas al contado.
+                        <p className="mt-4 max-w-[54ch] text-base text-muted-foreground sm:text-[17px]">
+                            Mira el plano real de la lotización, toca un lote libre y recibe tu proforma en PDF en menos de un minuto. Sin trámites ni esperas.
                         </p>
+
+                        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+                            <Button size="lg" asChild>
+                                <a href="#plano">
+                                    Ver lotes disponibles <ArrowDown />
+                                </a>
+                            </Button>
+                            {cuotaDesde && (
+                                <p className="text-sm text-muted-foreground">
+                                    Cuotas desde <b className="cifra text-lg text-foreground">{fmt(cuotaDesde)}</b> al mes
+                                </p>
+                            )}
+                        </div>
+
+                        <ul className="mt-9 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
+                            {[
+                                [Wallet, 'Sin cuota inicial', 'Empiezas a pagar el primer mes'],
+                                [CalendarRange, `Hasta ${reglas.plazo_maximo} meses`, 'Financiamiento directo'],
+                                [BadgePercent, `${reglas.descuento_contado_pct}% al contado`, 'Descuento sobre el total'],
+                                [FileText, 'Proforma en PDF', 'Con enlace privado'],
+                            ].map(([Icono, titulo, nota]) => {
+                                const I = Icono as typeof Wallet;
+                                return (
+                                    <li key={titulo as string} className="flex items-start gap-3">
+                                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                                            <I className="size-4.5" aria-hidden="true" />
+                                        </span>
+                                        <span className="min-w-0 leading-tight">
+                                            <span className="block text-sm font-semibold">{titulo as string}</span>
+                                            <span className="mt-0.5 block text-xs text-muted-foreground">{nota as string}</span>
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
                     </div>
-                    <dl className="grid grid-cols-3 gap-px overflow-hidden rounded-xl border bg-border text-sm">
-                        <div className="bg-card px-4 py-3">
-                            <dt className="text-xs text-muted-foreground">Lote interior</dt>
-                            <dd className="cifra text-lg font-bold">{fmt(proyecto.precio_m2_interior, false)}<span className="text-xs font-normal text-muted-foreground"> /m²</span></dd>
+
+                    <div className="rounded-2xl border bg-card/95 p-5 shadow-raised backdrop-blur-sm sm:p-6">
+                        <p className="etiqueta text-muted-foreground">Precio de lista</p>
+                        <dl className="mt-3 grid grid-cols-2 gap-3">
+                            {[
+                                ['Lote interior', proyecto.precio_m2_interior],
+                                ['Lote en esquina', proyecto.precio_m2_esquina],
+                            ].map(([k, v]) => (
+                                <div key={k} className="rounded-xl bg-muted px-4 py-3">
+                                    <dt className="text-xs text-muted-foreground">{k}</dt>
+                                    <dd className="cifra mt-0.5 text-[22px] leading-tight font-extrabold">
+                                        {fmt(Number(v), false)}
+                                        <span className="text-xs font-normal text-muted-foreground"> /m²</span>
+                                    </dd>
+                                </div>
+                            ))}
+                        </dl>
+
+                        <div className="mt-5">
+                            <div className="flex items-baseline justify-between gap-3 text-sm">
+                                <span className="font-semibold">Lotes disponibles</span>
+                                <span className="text-muted-foreground">
+                                    <b className="cifra text-lg text-foreground">{conteo.disponible}</b> de {total}
+                                </span>
+                            </div>
+                            <div
+                                className="mt-2 flex h-2.5 overflow-hidden rounded-full bg-muted"
+                                role="img"
+                                aria-label={`${conteo.disponible} disponibles, ${conteo.reservado} separados y ${conteo.vendido} vendidos de ${total} lotes`}
+                            >
+                                <div className="bg-ok" style={{ width: `${(conteo.disponible / total) * 100}%` }} />
+                                <div className="bg-warn" style={{ width: `${(conteo.reservado / total) * 100}%` }} />
+                                <div className="bg-bad" style={{ width: `${(conteo.vendido / total) * 100}%` }} />
+                            </div>
+                            <ul className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground" aria-hidden="true">
+                                {(['disponible', 'reservado', 'vendido'] as const).map((e) => (
+                                    <li key={e} className="inline-flex items-center gap-1.5">
+                                        <span className={e === 'disponible' ? 'size-2 rounded-full bg-ok' : e === 'reservado' ? 'size-2 rounded-full bg-warn' : 'size-2 rounded-full bg-bad'} />
+                                        {conteo[e]} {ESTADO_LOTE[e].toLowerCase()}s
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-                        <div className="bg-card px-4 py-3">
-                            <dt className="text-xs text-muted-foreground">Lote en esquina</dt>
-                            <dd className="cifra text-lg font-bold">{fmt(proyecto.precio_m2_esquina, false)}<span className="text-xs font-normal text-muted-foreground"> /m²</span></dd>
-                        </div>
-                        <div className="bg-card px-4 py-3">
-                            <dt className="text-xs text-muted-foreground">Disponibles</dt>
-                            <dd className="cifra text-lg font-bold">
-                                {conteo.disponible}
-                                <span className="text-xs font-normal text-muted-foreground"> de {resumen?.total_lotes ?? lotes.length}</span>
-                            </dd>
-                        </div>
-                    </dl>
+                    </div>
                 </div>
             </section>
 
-            <div className="mx-auto grid max-w-[1360px] gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_25rem] xl:grid-cols-[minmax(0,1fr)_27rem]">
-                <Card className="min-w-0 gap-4 py-4">
+            <div className="mx-auto grid max-w-[1360px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[minmax(0,1fr)_25rem] xl:grid-cols-[minmax(0,1fr)_27rem]">
+                <Card id="plano" className="min-w-0 scroll-mt-20 gap-4 py-4">
                     <div className="flex flex-wrap items-center gap-x-5 gap-y-3 px-4">
                         <ToggleGroup type="single" value={tipo} onValueChange={(v) => v && setTipo(v as typeof tipo)} aria-label="Ubicación del lote">
                             <ToggleGroupItem value="todos">Todos</ToggleGroupItem>

@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { ArrowRight, CalendarDays, FilePlus, Inbox } from 'lucide-react';
+import { ArrowRight, CalendarCheck, CalendarDays, CircleCheck, FilePlus, FileText, Inbox, Timer } from 'lucide-react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { EstadoVisita } from '@/components/estado';
@@ -57,18 +57,33 @@ export default function Inicio({ resumen, recientes, visitas, disponibilidad, se
                 </Button>
             }
         >
-            <div className="grid gap-6">
-                <dl className="grid grid-cols-2 overflow-hidden rounded-xl border bg-card md:grid-cols-4">
-                    {[
-                        ['Tiempo promedio de atención', minutos(resumen.tiempo_promedio), resumen.tiempo_promedio <= 30 ? 'dentro de la meta de 30 min' : 'por encima de la meta de 30 min', resumen.tiempo_promedio <= 30],
-                        ['Atenciones dentro de 30 min', porcentaje(resumen.pct_cumplimiento), `${resumen.atenciones} atenciones medidas`, resumen.pct_cumplimiento >= 80],
-                        ['Conversión a visita', porcentaje(resumen.tasa_conversion), 'atenciones que agendaron visita', null],
-                        ['Cotizaciones de hoy', String(resumen.cotizaciones_hoy), fecha(new Date().toISOString(), "EEEE d 'de' MMMM"), null],
-                    ].map(([titulo, valor, nota, bueno], i) => (
-                        <div key={String(titulo)} className={cn('px-5 py-4', i % 2 === 1 && 'border-l', i > 1 && 'border-t md:border-t-0', i === 2 && 'md:border-l')}>
-                            <dt className="text-[13px] text-muted-foreground">{titulo}</dt>
-                            <dd className="cifra mt-1 text-[28px] leading-none font-extrabold">{valor}</dd>
-                            <p className={cn('mt-1.5 text-xs', bueno === true ? 'text-ok' : bueno === false ? 'text-bad' : 'text-muted-foreground')}>{nota}</p>
+            <div className="grid grid-cols-1 gap-6">
+                <dl className="grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 xl:grid-cols-4">
+                    {(
+                        [
+                            [Timer, 'Tiempo promedio de atención', minutos(resumen.tiempo_promedio), resumen.atenciones ? (resumen.tiempo_promedio <= 30 ? 'Dentro de la meta de 30 min' : 'Por encima de la meta de 30 min') : 'Sin atenciones medidas', resumen.atenciones ? resumen.tiempo_promedio <= 30 : null],
+                            [CircleCheck, 'Atenciones dentro de 30 min', porcentaje(resumen.pct_cumplimiento), `${resumen.atenciones} atenciones medidas`, resumen.atenciones ? resumen.pct_cumplimiento >= 80 : null],
+                            [CalendarCheck, 'Conversión a visita', porcentaje(resumen.tasa_conversion), 'Atenciones que agendaron visita', null],
+                            [FileText, 'Cotizaciones de hoy', String(resumen.cotizaciones_hoy), fecha(new Date().toISOString(), "EEEE d 'de' MMMM"), null],
+                        ] as const
+                    ).map(([Icono, titulo, valor, nota, bueno]) => (
+                        <div key={titulo} className="flex flex-col rounded-xl border bg-card p-5 shadow-card">
+                            <div className="flex items-start justify-between gap-3">
+                                <dt className="text-[13px] font-medium text-muted-foreground">{titulo}</dt>
+                                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-foreground">
+                                    <Icono className="size-4.5" aria-hidden="true" />
+                                </span>
+                            </div>
+                            <dd className="cifra mt-auto pt-3 text-[30px] leading-none font-extrabold">{valor}</dd>
+                            <p
+                                className={cn(
+                                    'mt-3 inline-flex items-center gap-1.5 text-xs first-letter:uppercase',
+                                    bueno === true ? 'text-ok' : bueno === false ? 'text-bad' : 'text-muted-foreground',
+                                )}
+                            >
+                                {bueno !== null && <span className={cn('size-1.5 rounded-full', bueno ? 'bg-ok' : 'bg-bad')} aria-hidden="true" />}
+                                {nota}
+                            </p>
                         </div>
                     ))}
                 </dl>
@@ -85,7 +100,7 @@ export default function Inicio({ resumen, recientes, visitas, disponibilidad, se
                     </Link>
                 )}
 
-                <div className="grid gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+                <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
                     <Card>
                         <CardHeader>
                             <CardTitle>Atenciones cerradas</CardTitle>

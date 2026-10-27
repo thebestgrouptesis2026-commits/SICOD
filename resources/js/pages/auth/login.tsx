@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, LoaderCircle, LockKeyhole } from 'lucide-react';
+import { ArrowLeft, ChartColumnBig, FileText, LayoutGrid, LoaderCircle, LockKeyhole } from 'lucide-react';
 
 import { Avisos } from '@/components/avisos';
 import { Campo } from '@/components/campo';
@@ -31,7 +31,7 @@ function ManzanaDecorativa() {
         vendidos.has(i) ? 'fill-primary-foreground/25' : separados.has(i) ? 'fill-primary-foreground/45' : 'fill-primary-foreground/10';
 
     return (
-        <svg viewBox="-4 -4 74 40" className="w-full max-w-md" aria-hidden="true">
+        <svg viewBox="-4 -4 74 40" className="w-full" aria-hidden="true">
             {norte.map((l) => (
                 <rect key={`n${l.i}`} x={l.x + 0.25} y={0.25} width={l.w - 0.5} height={15.5} rx={0.6} className={clase(l.i)} stroke="currentColor" strokeOpacity={0.35} strokeWidth={0.3} />
             ))}
@@ -100,12 +100,53 @@ export default function Login() {
                     </div>
                 </div>
 
-                <div className="relative hidden flex-col justify-between overflow-hidden bg-primary p-12 text-primary-foreground lg:flex">
-                    <p className="max-w-md font-display text-[34px] leading-[1.08] font-extrabold [font-stretch:112%]">
-                        Disponibilidad real y proformas en minutos, no en una hora.
-                    </p>
-                    <ManzanaDecorativa />
-                    <p className="text-sm opacity-80">Inmobiliaria Constructora Taipe S.A.C. · RUC 20502902637</p>
+                <div className="relative hidden flex-col justify-between gap-8 overflow-hidden bg-primary p-12 text-primary-foreground lg:flex xl:px-16">
+                    <div
+                        className="pointer-events-none absolute inset-0 bg-[linear-gradient(currentColor_1px,transparent_1px),linear-gradient(90deg,currentColor_1px,transparent_1px)] bg-size-[32px_32px] opacity-[0.06]"
+                        aria-hidden="true"
+                    />
+                    <div className="pointer-events-none absolute -right-24 -bottom-24 size-112 rounded-full bg-primary-foreground/10 blur-3xl" aria-hidden="true" />
+
+                    <div className="relative">
+                        <p className="etiqueta opacity-75">Panel comercial</p>
+                        <p className="mt-3 max-w-md font-display text-[36px] leading-[1.06] font-extrabold [font-stretch:112%]">
+                            Disponibilidad real y proformas en minutos, no en una hora.
+                        </p>
+                        <ul className="mt-8 grid max-w-md gap-4">
+                            {[
+                                [LayoutGrid, 'Estado de cada lote al día, sin hojas de cálculo'],
+                                [FileText, 'Proforma en PDF con la cuota calculada al instante'],
+                                [ChartColumnBig, 'Indicadores de atención medidos solos, listos para SPSS'],
+                            ].map(([Icono, texto]) => {
+                                const I = Icono as typeof FileText;
+                                return (
+                                    <li key={texto as string} className="flex items-center gap-3 text-[15px]">
+                                        <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary-foreground/12 ring-1 ring-primary-foreground/15">
+                                            <I className="size-4.5" aria-hidden="true" />
+                                        </span>
+                                        {texto as string}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+
+                    <div className="relative w-full max-w-md rounded-2xl bg-primary-foreground/8 p-5 ring-1 ring-primary-foreground/15">
+                        <ManzanaDecorativa />
+                        <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-1 text-xs opacity-85" aria-hidden="true">
+                            <li className="inline-flex items-center gap-1.5">
+                                <span className="size-2.5 rounded-sm bg-primary-foreground/10 ring-1 ring-primary-foreground/40" /> Disponible
+                            </li>
+                            <li className="inline-flex items-center gap-1.5">
+                                <span className="size-2.5 rounded-sm bg-primary-foreground/45" /> Separado
+                            </li>
+                            <li className="inline-flex items-center gap-1.5">
+                                <span className="size-2.5 rounded-sm bg-primary-foreground/25" /> Vendido
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p className="relative text-sm opacity-80">Inmobiliaria Constructora Taipe S.A.C. · RUC 20502902637</p>
                 </div>
             </div>
             <Avisos />

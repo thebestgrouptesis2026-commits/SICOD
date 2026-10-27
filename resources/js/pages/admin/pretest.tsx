@@ -69,7 +69,7 @@ export default function Pretest({ registros, asesores, proyectos, canales }: Pro
             titulo="Registro del pretest (O1)"
             descripcion="Transcribe aquí cada atención de la ficha de registro de tiempos del proceso manual. Se guarda en la misma tabla que el postest para que ambas fases sean comparables."
         >
-            <div className="grid gap-6 xl:grid-cols-[24rem_minmax(0,1fr)]">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[24rem_minmax(0,1fr)]">
                 <Card className="self-start">
                     <CardHeader>
                         <CardTitle>Nueva atención manual</CardTitle>

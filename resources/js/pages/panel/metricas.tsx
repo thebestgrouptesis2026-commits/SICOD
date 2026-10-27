@@ -124,7 +124,7 @@ export default function Metricas({ tiempo, cumplimiento, conversion, canales, se
                 </DropdownMenu>
             }
         >
-            <div className="grid gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 <div className="grid gap-6 lg:grid-cols-3">
                     <Indicador
                         titulo="Tiempo promedio de generación de cotizaciones"

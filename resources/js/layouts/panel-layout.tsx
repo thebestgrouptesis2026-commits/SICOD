@@ -83,7 +83,7 @@ function Navegacion({ alNavegar }: { alNavegar?: () => void }) {
                 if (!enlaces.length) return null;
                 return (
                     <div key={g.titulo} className="grid gap-0.5">
-                        <p className="px-2.5 pb-1 text-xs font-semibold text-muted-foreground">{g.titulo}</p>
+                        <p className="etiqueta px-3 pb-1.5 text-[11px] text-muted-foreground">{g.titulo}</p>
                         {enlaces.map((e) => {
                             const esActivo = activo(url, e.href);
                             return (
@@ -94,8 +94,9 @@ function Navegacion({ alNavegar }: { alNavegar?: () => void }) {
                                     prefetch
                                     aria-current={esActivo ? 'page' : undefined}
                                     className={cn(
-                                        'flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                                        esActivo && 'bg-sidebar-accent font-semibold text-sidebar-accent-foreground',
+                                        'relative flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors duration-150 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                                        esActivo &&
+                                            'bg-sidebar-accent font-semibold text-sidebar-accent-foreground before:absolute before:inset-y-2 before:-left-3 before:w-1 before:rounded-r-full before:bg-primary',
                                     )}
                                 >
                                     <e.icono className={cn('size-4', esActivo ? 'text-primary' : 'text-muted-foreground')} />
@@ -211,8 +212,8 @@ export default function PanelLayout({
                         </div>
                     </header>
 
-                    <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pt-6 pb-16 sm:px-6 lg:px-8">
-                        <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                    <main className="mx-auto w-full max-w-[1320px] flex-1 px-4 pt-7 pb-16 sm:px-6 lg:px-8 lg:pt-9">
+                        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
                             <div className="min-w-0">
                                 <h1 className="text-[26px] leading-tight font-extrabold sm:text-[28px]">{titulo}</h1>
                                 {descripcion && <p className="mt-1 max-w-[70ch] text-[15px] text-muted-foreground">{descripcion}</p>}

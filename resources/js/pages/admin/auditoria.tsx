@@ -66,7 +66,7 @@ export default function Auditoria({ registros, filtros, alertas }: Props) {
             </div>
 
             <Card className="gap-0 py-0">
-                <div className="border-b px-4 py-3">
+                <div className="overflow-x-auto border-b px-4 py-3">
                     <ToggleGroup
                         type="single"
                         value={filtros.tipo}

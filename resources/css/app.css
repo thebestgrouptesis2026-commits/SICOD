@@ -15,7 +15,12 @@
  * Instrument Sans para el texto de trabajo.
  */
 :root {
-    --radius: 0.5rem;
+    --radius: 0.625rem;
+
+    /* Elevación en capas: sombra de contacto + sombra ambiental, teñidas de verde. */
+    --sombra-tarjeta: 0 1px 2px oklch(0.3 0.03 160 / 0.05), 0 2px 8px -2px oklch(0.3 0.03 160 / 0.06);
+    --sombra-elevada: 0 2px 4px oklch(0.3 0.03 160 / 0.05), 0 12px 32px -8px oklch(0.3 0.04 160 / 0.14);
+    --grid-line: oklch(0.43 0.078 163 / 0.07);
 
     --background: oklch(0.972 0.006 150);
     --foreground: oklch(0.215 0.02 160);
@@ -70,6 +75,10 @@
 }
 
 .dark {
+    --sombra-tarjeta: 0 1px 2px oklch(0 0 0 / 0.3);
+    --sombra-elevada: 0 2px 4px oklch(0 0 0 / 0.3), 0 16px 40px -12px oklch(0 0 0 / 0.55);
+    --grid-line: oklch(0.76 0.11 160 / 0.06);
+
     --background: oklch(0.17 0.012 160);
     --foreground: oklch(0.93 0.008 150);
     --card: oklch(0.205 0.013 160);
@@ -128,6 +137,10 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 10px);
+
+    --shadow-card: var(--sombra-tarjeta);
+    --shadow-raised: var(--sombra-elevada);
 
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -196,6 +209,17 @@
         outline: 2px solid var(--ring);
         outline-offset: 2px;
     }
+    /* Todo lo que se puede pulsar lo indica con el cursor. */
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']),
+    [role='tab'],
+    [role='radio'],
+    [role='menuitem'],
+    [role='option'],
+    label[for],
+    summary {
+        cursor: pointer;
+    }
     * {
         scrollbar-width: thin;
         scrollbar-color: var(--input) transparent;
@@ -211,6 +235,20 @@
     }
     .tabular {
         font-variant-numeric: tabular-nums;
+    }
+    /* Cuadrícula de plano topográfico, para fondos de portada. */
+    .fondo-plano {
+        background-image:
+            linear-gradient(var(--grid-line) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: 32px 32px;
+        background-position: -1px -1px;
+    }
+    .etiqueta {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
     }
 }
 

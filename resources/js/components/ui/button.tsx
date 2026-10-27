@@ -5,13 +5,13 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-    "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-semibold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring/40 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md text-sm font-semibold whitespace-nowrap transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out outline-none select-none focus-visible:ring-[3px] focus-visible:ring-ring/40 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
         variants: {
             variant: {
-                default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90',
+                default: 'bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20',
                 destructive: 'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/30',
-                outline: 'border border-input bg-card shadow-xs hover:bg-secondary hover:text-secondary-foreground',
+                outline: 'border border-input bg-card shadow-xs hover:border-primary/40 hover:bg-secondary hover:text-secondary-foreground',
                 secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/70',
                 ghost: 'hover:bg-secondary hover:text-secondary-foreground',
                 link: 'text-primary underline-offset-4 hover:underline',
