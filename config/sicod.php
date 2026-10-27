@@ -42,6 +42,9 @@ return [
     // Obliga a cambiar la contrasena inicial en el primer ingreso.
     'forzar_cambio_password' => (bool) env('SICOD_FORZAR_CAMBIO_PASSWORD', true),
 
+    // IPs del proxy inverso o tunel, separadas por coma ('*' = cualquiera).
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
     // Proteccion contra fuerza bruta en el inicio de sesion.
     'login_intentos' => (int) env('SICOD_LOGIN_INTENTOS', 5),
 ];

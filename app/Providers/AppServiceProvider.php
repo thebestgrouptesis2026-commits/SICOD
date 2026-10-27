@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Schema;
@@ -32,6 +33,13 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
+        }
+
+        // Detras de un proxy o tunel (Nginx, Cloudflare) para que
+        // request()->ip() registre la IP real en la auditoria y las URLs
+        // salgan con el esquema y dominio publicos.
+        if ($proxies = config('sicod.trusted_proxies')) {
+            TrustProxies::at($proxies === '*' ? '*' : array_map('trim', explode(',', $proxies)));
         }
 
         Vite::prefetch(concurrency: 3);

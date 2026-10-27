@@ -25,9 +25,8 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 
-        // Detras de un proxy o balanceador (Nginx, Cloudflare) para que
-        // request()->ip() registre la IP real en la auditoria.
-        $middleware->trustProxies(at: env('TRUSTED_PROXIES') ? explode(',', env('TRUSTED_PROXIES')) : []);
+        // Los proxies de confianza (TRUSTED_PROXIES) se registran en
+        // AppServiceProvider: aqui el .env todavia no esta cargado.
 
         $middleware->alias([
             'rol' => VerificarRol::class,
